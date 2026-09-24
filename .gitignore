@@ -1,0 +1,37 @@
+# Byte-compiled and native compilation
+*.elc
+eln-cache/
+
+# Backups, autosaves, and lock files
+*~
+\#*\#
+.#*
+auto-save-list/
+
+# Package managers
+elpa/
+straight/
+quelpa/
+.cask/
+
+# Runtime state and history
+.cache/
+var/
+transient/
+recentf
+places
+saveplace
+bookmarks
+projectile-bookmarks.eld
+tramp
+undo-tree-hist/
+history
+*.eld
+
+# Local customization and credentials
+custom.el
+authinfo*
+.authinfo*
+
+# OS specific
+.DS_Store
