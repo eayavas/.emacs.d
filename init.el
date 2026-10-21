@@ -7,17 +7,26 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+(electric-pair-mode 1)
+(setq electric-pair-open-newline-between-pairs t)
+
+(set-face-attribute 'default nil
+                    :font "SF Mono"
+                    :height 120)
+
+
+(use-package doric-themes
+  :ensure t
+  :demand t
+) 
+
 ;; Sync theme with macOS system appearance
 (add-hook 'ns-system-appearance-change-functions
           (lambda (appearance)
             (mapc #'disable-theme custom-enabled-themes)
             (pcase appearance
-              ('light (load-theme 'modus-operandi t))
-              ('dark  (load-theme 'modus-vivendi t)))))
-
-(set-face-attribute 'default nil
-                    :font "SF Mono"
-                    :height 120)
+              ('light (load-theme 'doric-marble t))
+              ('dark  (load-theme 'doric-obsidian t)))))
 
 (setq mac-option-modifier 'none)
 (setq mac-command-modifier 'meta)
@@ -82,9 +91,25 @@
   (setq sclang-auto-scroll-post-buffer t))
 
 (custom-set-variables
- '(package-selected-packages nil))
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("a88cbf5f51d1021c5cb82a89136f5c65e60b117fc7893e4087a55a1617675210"
+     "5f843ef0d18f55ef9b1e72ac9aaa59efdd698ee31781a86f7a054047a036bd08"
+     "d3ebccab28ecb41dfb9a97cdb90212b301f7568dc89407cd508fca2ac3d29de9"
+     "b243ec44629b75034c83be3fa411662f89582223012e8f4110a82dc40bf8561a"
+     "d6d569756b04beb0fc7c9ca83d18f61f18875849f4b9a9d34fca0b69056dc4de"
+     default))
+ '(package-selected-packages '(auto-dark doric-themes evil-collection tidal)))
 
-(custom-set-faces)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
 
 (add-hook 'emacs-startup-hook
           (lambda ()
@@ -92,10 +117,33 @@
 
 (defun eay/live-coding-setup ()
   (interactive)
-  (delete-other-windows)
-  
+  (require 'tidal)
+  (require 'sclang)
+
   (let ((tidal-file "~/Documents/TidalCycles")
         (sc-file "~/Documents/supercollider"))
+
+    (with-current-buffer (find-file-noselect sc-file)
+      (sclang-mode)
+      (unless (sclang-get-process)
+        (save-window-excursion (sclang-start))))
+
+    (with-current-buffer (find-file-noselect tidal-file)
+      (tidal-mode)
+      (unless (get-buffer "*tidal*")
+        (save-window-excursion (tidal-start-haskell))))
+
+    (find-file tidal-file)
+    (delete-other-windows)))
+
+(defun eay/live-coding-setup-with-panes ()
+  (interactive)
+  (require 'tidal)
+  (require 'sclang)
+  (delete-other-windows)
+  
+  (let ((tidal-file "~/LiveCoding/tidal_cycles")
+        (sc-file "~/LiveCoding/supercollider"))
         
     (find-file tidal-file)
     (split-window-right)

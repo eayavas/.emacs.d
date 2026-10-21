@@ -22,3 +22,7 @@
 ;; Uzak dosya kontrolünü (RegEx) açılış boyunca kapat
 (defvar my-default-file-name-handler-alist file-name-handler-alist)
 (setq file-name-handler-alist nil)
+
+(set-face-attribute 'default nil
+                    :font "SF Mono"
+                    :height 120)
